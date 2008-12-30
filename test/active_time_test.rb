@@ -1,8 +1,13 @@
-require 'test_helper'
+require File.dirname(__FILE__) + '/test_helper'
 
 class ActiveTimeTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  
+  setup do
+    setup_db
   end
+  
+  teardown do
+    teardown_db
+  end
+    
 end
