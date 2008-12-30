@@ -47,7 +47,6 @@ class ActiveTime
     return :day if @hour.nil?
     return :hour
   end
-  memoize :range
       
   # Allows association calls similar to has_many to be called on the ActiveTime object, with the
   # missing method name used to infer the class name (posts => Post).  We then call in_date_range 
