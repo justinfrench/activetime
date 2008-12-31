@@ -64,8 +64,8 @@ class ActiveTime
   def method_missing(method_name, *args)
     if method_name.to_s =~ COLLECTION_METHOD_NAMES_PATTERN
       args[0] ||= :created_at
+      klass_name = self.class.class_name_for_method_name(method_name)
       begin
-        klass_name = class_name_for_method_name(method_name)
         klass = klass_name.constantize
         return klass.in_date_range(starting, ending, args[0]) # Post.in_date_range(start_time, end_time, :created_at)
       rescue NoMethodError

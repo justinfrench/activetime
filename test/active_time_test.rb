@@ -221,6 +221,30 @@ class ActiveTimeTest < ActiveSupport::TestCase
         assert_equal "User",          ActiveTime.send(:class_name_for_method_name, "users")
         assert_equal "Summary",       ActiveTime.send(:class_name_for_method_name, "summaries")
       end
+      
+      should "not raise NoMethodError if the collection's class responds to in_date_range" do
+        assert Post.respond_to?(:in_date_range)
+        assert_nothing_raised do
+          ActiveTime.new(2008).posts
+        end
+      end
+      
+      should "raise NoMethodError if the collection's class doesn't respond to in_date_range" do
+        assert !NonActiveRecordThing.respond_to?(:in_date_range)
+        assert_raise NoMethodError do
+          ActiveTime.new(2008).non_active_record_things
+        end
+      end
+      
+      should "raise NameError if the collection's class doesn't exist" do
+        assert_raise NameError do
+          ActiveTime.new(2008).foos
+        end
+        assert_raise NameError do
+          ActiveTime.new(2008).bahs
+        end
+      end
+      
     end
                 
   end

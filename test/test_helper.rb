@@ -31,3 +31,6 @@ end
 
 class Post < ActiveRecord::Base
 end
+
+class NonActiveRecordThing
+end
