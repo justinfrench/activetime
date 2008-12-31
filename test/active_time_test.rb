@@ -215,6 +215,12 @@ class ActiveTimeTest < ActiveSupport::TestCase
         assert @object.respond_to?(:summaries)
       end
       
+      should "infer a class name from the missing method name" do
+        assert_equal "Post",          ActiveTime.send(:class_name_for_method_name, "posts")
+        assert_equal "ActivityEvent", ActiveTime.send(:class_name_for_method_name, "activity_events")
+        assert_equal "User",          ActiveTime.send(:class_name_for_method_name, "users")
+        assert_equal "Summary",       ActiveTime.send(:class_name_for_method_name, "summaries")
+      end
     end
                 
   end

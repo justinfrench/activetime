@@ -65,7 +65,7 @@ class ActiveTime
     if method_name.to_s =~ COLLECTION_METHOD_NAMES_PATTERN
       args[0] ||= :created_at
       begin
-        klass_name = method_name.to_s.singularize.classify
+        klass_name = class_name_for_method_name(method_name)
         klass = klass_name.constantize
         return klass.in_date_range(starting, ending, args[0]) # Post.in_date_range(start_time, end_time, :created_at)
       rescue NoMethodError
@@ -102,6 +102,12 @@ class ActiveTime
     else
       "between #{starting.strftime("%B %d %Y %H:%M:%S")} and #{starting.strftime("%B %d %Y %H:%M:%S")}" # from 14:18:22 to 14:19:23 on November 18 2008
     end
+  end
+  
+  protected
+  
+  def self.class_name_for_method_name(method_name)
+    method_name.to_s.singularize.classify
   end
   
 end
