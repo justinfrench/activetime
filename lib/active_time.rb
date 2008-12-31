@@ -1,5 +1,7 @@
 class ActiveTime
   
+  COLLECTION_METHOD_NAMES_PATTERN = /[a-z_]+s$/
+  
   attr_accessor :starting, :ending
   alias_method :time, :starting
   
@@ -60,7 +62,7 @@ class ActiveTime
   #
   # TODO: memoize the results, to avoid multiple queries for the same method call.
   def method_missing(method_name, *args)
-    if method_name.to_s =~ /[a-z_]+s$/
+    if method_name.to_s =~ COLLECTION_METHOD_NAMES_PATTERN
       args[0] ||= :created_at
       begin
         klass_name = method_name.to_s.singularize.classify
@@ -74,6 +76,12 @@ class ActiveTime
     else
       super
     end
+  end
+  
+  # If method_missing deals with these, respond_to should too.
+  def respond_to?(method_name)
+    return true if method_name.to_s =~ COLLECTION_METHOD_NAMES_PATTERN
+    super
   end
   
   # Provides a human friendly string description of the date or time range being used.  Examples:

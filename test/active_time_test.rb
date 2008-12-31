@@ -208,6 +208,13 @@ class ActiveTimeTest < ActiveSupport::TestCase
         assert_equal @object.starting, @object.time
       end
       
+      should "respond to methods named after collections of ActiveRecord objects" do
+        assert @object.respond_to?(:posts)
+        assert @object.respond_to?(:activity_events)
+        assert @object.respond_to?(:users)
+        assert @object.respond_to?(:summaries)
+      end
+      
     end
                 
   end
