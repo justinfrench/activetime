@@ -5,8 +5,20 @@
 #  end_date = Time.gm(2007)
 #  Post.in_date_range(start_date, end_date)
 #  # => returns all posts with a created_at between start_date and end_date
-class ActiveRecord::Base
-  named_scope :in_date_range, lambda { |start_date, end_date, column_name| { 
-    :conditions => ["#{column_name} between ? and ?", start_date.to_s(:db), end_date.to_s(:db)] 
-  } }
+
+module ActiveTimeActiveRecordExtensions
+  def self.included(within)
+    within.class_eval do
+      named_scope :in_date_range, lambda { |start_date, end_date, column_name| { 
+        :conditions => ["#{column_name} between ? and ?", start_date.to_s(:db), end_date.to_s(:db)] 
+      } }
+    end
+  end
 end
+
+if defined?(ActiveRecord)
+  ActiveRecord::Base.class_eval do
+    include ActiveTimeActiveRecordExtensions
+  end
+end
+
