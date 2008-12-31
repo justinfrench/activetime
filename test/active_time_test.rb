@@ -215,6 +215,11 @@ class ActiveTimeTest < ActiveSupport::TestCase
         assert @object.respond_to?(:summaries)
       end
       
+      should "not respond to methods not named after collections of ActiveRecord objects" do
+        assert !@object.respond_to?(:oh_hello)
+        assert !@object.respond_to?(:foo?)
+      end
+      
       should "infer a class name from the missing method name" do
         assert_equal "Post",          ActiveTime.send(:class_name_for_method_name, "posts")
         assert_equal "ActivityEvent", ActiveTime.send(:class_name_for_method_name, "activity_events")
