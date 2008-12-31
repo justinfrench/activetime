@@ -23,7 +23,7 @@ class ActiveTime
     case args.first
     when Fixnum, String
       @year, @month, @day, @hour, @min, @sec = *args
-      @starting = Time.gm(year, month, day)
+      @starting = Time.gm(@year, @month, @day)
       @ending = @starting.send("end_of_#{range}")
     when Time
       raise(ArgumentError, "both a starting and ending time must be supplied") unless (args[1] && args[1].is_a?(Time))
