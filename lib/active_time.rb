@@ -44,8 +44,7 @@ class ActiveTime
     return :custom if @year.nil?
     return :year if @month.nil?
     return :month if @day.nil?
-    return :day if @hour.nil?
-    return :hour
+    return :day
   end
       
   # Allows association calls similar to has_many to be called on the ActiveTime object, with the
