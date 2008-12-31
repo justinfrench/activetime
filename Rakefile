@@ -21,3 +21,12 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+desc "Run all examples with RCov"
+task :coverage do
+  rm_f "coverage"
+  rm_f "coverage.data"
+  rcov = "rcov --aggregate coverage.data --text-summary -Ilib"
+  system("#{rcov} --no-html test/*_test.rb")
+  system("open coverage/index.html") if PLATFORM['darwin']
+end
