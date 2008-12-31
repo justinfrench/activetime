@@ -22,14 +22,15 @@ class ActiveTime
   def initialize(*args)
     case args.first
     when Fixnum, String
-      @year, @month, @day, @hour, @min, @sec = *args
+      raise(ArgumentError, "too many arguments - only year, month and day are supported") if args.size > 3
+      @year, @month, @day = *args
       @starting = Time.gm(@year, @month, @day)
       @ending = @starting.send("end_of_#{range}")
     when Time
       raise(ArgumentError, "both a starting and ending time must be supplied") unless (args[1] && args[1].is_a?(Time))
       @starting, @ending = *args
     else
-      raise ArgumentError, "arguments must either be (starting_time, ending_time) or (year,[month,[day],[hour],[min],[sec]])"
+      raise ArgumentError, "arguments must either be (starting_time, ending_time) or (year,[month,[day]])"
     end
   end
   
@@ -80,9 +81,6 @@ class ActiveTime
   #   ActiveTime.new(2008)                      # => "in 2008"
   #   ActiveTime.new(2008, 11)                  # => "in November 2008"
   #   ActiveTime.new(2008, 11, 18)              # => "on November 18 2008"
-  #   ActiveTime.new(2008, 11, 18, 14)          # => "from 14:00 to 15:00 on November 18 2008"
-  #   ActiveTime.new(2008, 11, 18, 14, 18)      # => "from 14:18 to 14:19 on November 18 2008"
-  #   ActiveTime.new(2008, 11, 18, 14, 18, 22)  # => "from 14:18:22 to 14:19:23 on November 18 2008"
   #
   # TODO: could be a whole lot DRYer and configurable
   def description
@@ -93,10 +91,6 @@ class ActiveTime
       "in #{starting.strftime("%B %Y")}" # in November 2008
     when :day
       "on #{starting.strftime("%B %d, %Y")}" # on November 18, 2008
-    when :hour, :min, :sec
-      "between #{starting.strftime("%H:%M")} and #{ending.strftime("%H:%M")} on #{starting.strftime("%B %d, %Y")}" # between 22:00 and 23:00 on November 18, 2008
-    when :sec
-      "between #{starting.strftime("%H:%M:%S")} and #{ending.strftime("%H:%M:%S")} on #{starting.strftime("%B %d, %Y")}" # between 22:18 and 23:19 on November 18, 2008
     else
       "between #{starting.strftime("%B %d %Y %H:%M:%S")} and #{starting.strftime("%B %d %Y %H:%M:%S")}" # from 14:18:22 to 14:19:23 on November 18 2008
     end
