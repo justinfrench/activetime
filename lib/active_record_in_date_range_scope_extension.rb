@@ -2,9 +2,9 @@
 # will have a suitable scope for the has_many-style associations.  You can also call it directly:
 # 
 #  start_date = Time.gm(2006)
-#  end_date = Time.gm(2007)
-#  Post.in_date_range(start_date, end_date)
-#  # => returns all posts with a created_at between start_date and end_date
+#  end_date = Time.now
+#  Post.in_date_range(start_date, end_date, :created_at)
+#  # => returns all posts with a created_at between Jan 2006 and now
 
 module ActiveTimeActiveRecordExtensions
   def self.included(within)
