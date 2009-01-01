@@ -2,7 +2,7 @@ class ActiveTime
   
   COLLECTION_METHOD_NAMES_PATTERN = /[a-z_]+s$/
   
-  attr_accessor :starting, :ending
+  attr_accessor :starting, :ending, :year, :month, :day
   alias_method :time, :starting
   
   # Creates an object representing a period of time with a starting and ending 
@@ -102,6 +102,18 @@ class ActiveTime
     else
       "between #{starting.strftime("%B %d %Y %H:%M:%S")} and #{starting.strftime("%B %d %Y %H:%M:%S")}" # from 14:18:22 to 14:19:23 on November 18 2008
     end
+  end
+  
+  # Returns true if the +comparison_object+ is the same object, or is of the same type and has the same id.
+  def ==(comparable_object)
+    comparable_object.equal?(self) || (
+      comparable_object.instance_of?(self.class) &&
+      comparable_object.year      == year     &&
+      comparable_object.month     == month    &&
+      comparable_object.starting  == starting &&
+      comparable_object.ending    == ending   &&
+      comparable_object.range     == range
+    )
   end
   
   protected

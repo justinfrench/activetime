@@ -253,5 +253,195 @@ class ActiveTimeTest < ActiveSupport::TestCase
     end
                 
   end
+  
+  context "Year" do
     
+    context "when initialized with only one time arg" do
+      
+      setup do
+        @object = Year.new(starting)
+      end
+      
+      should "be the same as intitializing with a year Fixnum" do
+        assert Year.new(starting.year) == @object
+      end
+            
+    end
+    
+    context "when initialized with a year Fixnum" do
+      
+      setup do
+        @object = Year.new(year)
+      end
+      
+      should "have the same starting time as intitializing ActiveTime with a year Fixnum" do
+        assert ActiveTime.new(year).starting == @object.starting
+      end
+    
+    end
+    
+    context "when initialized with no args" do
+      
+      should "raise ArgumentError" do
+        assert_raise ArgumentError do
+          Year.new
+        end
+      end
+      
+    end
+    
+    context "when initialized correctly" do
+      
+      setup do
+        @object = Year.new(year)
+        @active_time = ActiveTime.new(year)
+      end
+      
+      should "have a description equal to a similar ActiveTime object" do
+        assert_equal @active_time.description, @object.description
+      end
+      
+      should "have a starting time equal to a similar ActiveTime object" do
+        assert_equal @active_time.starting, @object.starting
+      end
+      
+      should "have an ending time equal to a similar ActiveTime object" do
+        assert_equal @active_time.ending, @object.ending
+      end
+      
+      should "have a range equal to a similar ActiveTime object" do
+        assert_equal @active_time.range, @object.range
+      end
+      
+    end
+    
+  end
+  
+  context "Month" do
+    
+    context "when initialized with only one time arg" do
+      
+      setup do
+        @object = Month.new(starting)
+      end
+      
+      should "be the same as intitializing with year and month Fixnum" do
+        assert Month.new(starting.year, starting.month) == @object
+      end
+            
+    end
+    
+    context "when initialized with a year and month Fixnum" do
+      
+      setup do
+        @object = Year.new(year, month)
+      end
+      
+      should "have the same starting time as intitializing ActiveTime with a year Fixnum" do
+        assert ActiveTime.new(year, month).starting == @object.starting
+      end
+    
+    end
+    
+    context "when initialized with no args" do
+      
+      should "raise ArgumentError" do
+        assert_raise ArgumentError do
+          Month.new
+        end
+      end
+      
+    end
+    
+    context "when initialized correctly" do
+      
+      setup do
+        @object = Month.new(year, month)
+        @active_time = ActiveTime.new(year, month)
+      end
+      
+      should "have a description equal to a similar ActiveTime object" do
+        assert_equal @active_time.description, @object.description
+      end
+      
+      should "have a starting time equal to a similar ActiveTime object" do
+        assert_equal @active_time.starting, @object.starting
+      end
+      
+      should "have an ending time equal to a similar ActiveTime object" do
+        assert_equal @active_time.ending, @object.ending
+      end
+      
+      should "have a range equal to a similar ActiveTime object" do
+        assert_equal @active_time.range, @object.range
+      end
+      
+    end
+    
+  end
+  
+  context "Day" do
+    
+    context "when initialized with only one time arg" do
+      
+      setup do
+        @object = Day.new(starting)
+      end
+      
+      should "have the same starting time as intitializing with year, month and Fixnum" do
+        assert Day.new(starting.year, starting.month, starting.day).starting == @object.starting
+      end
+            
+    end
+    
+    context "when initialized with a year, month and day Fixnum" do
+      
+      setup do
+        @object = Year.new(year, month, day)
+      end
+      
+      should "be the same starting time as intitializing ActiveTime with a year Fixnum" do
+        assert ActiveTime.new(year, month, day).starting == @object.starting
+      end
+    
+    end
+    
+    context "when initialized with no args" do
+      
+      should "raise ArgumentError" do
+        assert_raise ArgumentError do
+          Day.new
+        end
+      end
+      
+    end
+    
+    context "when initialized correctly" do
+      
+      setup do
+        @object = Day.new(year, month, day)
+        @active_time = ActiveTime.new(year, month, day)
+      end
+      
+      should "have a description equal to a similar ActiveTime object" do
+        assert_equal @active_time.description, @object.description
+      end
+      
+      should "have a starting time equal to a similar ActiveTime object" do
+        assert_equal @active_time.starting, @object.starting
+      end
+      
+      should "have an ending time equal to a similar ActiveTime object" do
+        assert_equal @active_time.ending, @object.ending
+      end
+      
+      should "have a range equal to a similar ActiveTime object" do
+        assert_equal @active_time.range, @object.range
+      end
+      
+    end
+    
+  end
+  
+  
 end
