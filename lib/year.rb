@@ -27,9 +27,9 @@
 # Because Day is a subclass of ActiveTime, all ActiveTime methods are available (see documentation 
 # for more details):
 #
-#   Yeaar.new(Time.now).range                 # => :year
-#   Yeaar.new(Time.now).description           # => "in January 2009"
-#   Yeaar.new(Time.now).posts                 # => a collection of Posts created in this year
+#   Year.new(Time.now).range                 # => :year
+#   Year.new(Time.now).description           # => "in January 2009"
+#   Year.new(Time.now).posts                 # => a collection of Posts created in this year
 
 class Year < ActiveTime
   
