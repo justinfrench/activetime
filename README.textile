@@ -2,38 +2,60 @@ h1. ActiveTime
 
 ActiveTime is a Rails plugin that provides a parent object for has_many-ish associations to other ActiveRecord classes, but instead of a foreign key to scope the queries, a date range is used instead.
 
-A year has many posts, a month has many comments, etc.
+While this isn't exactly how it all works, this should help visualize what I'm aiming for:
+
+<pre>
+class Year
+  has_many :posts
+  has_many :comments
+end
+</pre>
 
 h2. A few quick examples:
   
 <pre>
 # All Posts created in 2008
-ActiveTime.new(2008).posts
+Year.new(2008).posts
+
+# All Posts created in the current year
+Year.new(Time.now)
+
+# All Comments created in November 2008
+Month.new(2008, 11).comments
+
+# All Comments created in the current month
+Month.new(Time.now).comments
 
 # All Users created on November 15, 2008
-ActiveTime.new(2008, 11, 15).users  
+Day.new(2008, 11, 15).users
 
-# All Comments created between two specific Times
-ActiveTime.new(1.year.ago.utc, Time.now.utc).comments
+# All Users created in the current day
+Day.new(Time.now).users
 
 # You aren't stuck with created_at either
-ActiveTime.new(2008).posts(:published_at)
+Year.new(2008).posts(:published_at)
 
-# It's a named_scope under the hood, so you can do normal stuff:
-ActiveTime.new(2008).posts.public.newest_first.paginate
+# ActiveTime can be used instead
+ActiveTime.new(2008).posts
+
+# Which is helpful when you want a range between two specific dates/times
+ActiveTime.new(1.year.ago.utc, Time.now.utc).comments
+
+# And it's just a wrapper around a named_scope under the hood, so you can do normal stuff:
+Year.new(2008).posts.public.newest_first.paginate
 </pre>
 
 h2. Installation
 
-./script/plugin install git://github.com/justinfrench/active_time.git
+./script/plugin install git://github.com/justinfrench/activetime.git
   
 h2. Why?
 
-I'm not sure why *you* need it, but I'm building some RESTful controllers that need to present resources in a hierarchy based on dates (rather than a typical has_many/belongs_to association), so I wanted a model for the resource, upon which I could do the usual ActiveRecord has_many associations, scope chaining, pagination, etc.
+I'm not sure why *you* need it, but I'm building some RESTful controllers that need to present resources in a hierarchy based on dates (rather than a typical has_many/belongs_to association), so I wanted a model for the resource, upon which I could do the usual ActiveRecord has_many associations, scope chaining, pagination, etc.  I wanted something that felt like ActiveRecord a bit.
 
 h2. How?
 
-Firstly, the plugin adds a named scope to ActiveRecord::Base (so it's added to all your AR classes) called in_date_range, which you can use directly if needed.  It takes two Time objects in UTC as arguments (start time, end time) and optionally, a third argument that specifies which column the date range applies to (the default is :created_at).  Examples:
+Firstly, the plugin adds a named scope to ActiveRecord::Base (so it's added to all your AR models) called in_date_range, which you can use directly if needed.  It takes two Time objects in UTC as arguments (start time, end time) and optionally, a third argument that specifies which column the date range applies to (the default is :created_at).  Examples:
 
 <pre>
 Post.in_date_range(1.year.ago.utc, Time.now_utc)
@@ -50,49 +72,43 @@ ActiveTime.new(1.year.ago.utc, Time.now.utc).posts
 Given that the second version is two characters *longer*, it's not all that impressive, but what I really needed was to pass in just the start date, or part of one (like params[:year]) and automatically figure out what range I wanted (a whole year, a month, a day).
 
 <pre>
-ActiveTime.new(params[:year]).posts
-ActiveTime.new(params[:year], params[:month]).posts
+Year.new(params[:year]).posts
+Month.new(params[:year], params[:month]).posts
 </pre>
   
 h2. And there's more!
 
 <pre>  
 # Get the calculated start and end times:
-ActiveTime.new(2008).starting             # => Tue Jan 01 00:00:00 UTC 2008
-ActiveTime.new(2008).ending               # => Wed Dec 31 23:59:59 UTC 2008
+Year.new(2008).starting             # => Tue Jan 01 00:00:00 UTC 2008
+Year.new(2008).ending               # => Wed Dec 31 23:59:59 UTC 2008
 
 # Get a description of the range
-ActiveTime.new(2008)                      # => in 2008
-ActiveTime.new(2008, 11)                  # => in November 2008
-ActiveTime.new(2008, 11, 18)              # => on November 18 2008
-ActiveTime.new(2008, 11, 18, 14)          # => from 14:00 to 15:00 on November 18 2008
-ActiveTime.new(2008, 11, 18, 14, 18)      # => from 14:18 to 14:19 on November 18 2008
-ActiveTime.new(2008, 11, 18, 14, 18, 22)  # => from 14:18:22 to 14:19:23 on November 18 2008
+Year.new(2008)                      # => in 2008
+Month.new(2008, 11)                 # => in November 2008
+Day.new(2008, 11, 18)               # => on November 18 2008
 </pre>
 
 
 h2. Status
 
-I wrote it and published it to Github in a few hours, so it's really really fresh and not battle tested at all.  Working on it!
+It's pretty fresh and not battle tested yet, but the test suite is pretty solid.  There's heaps more to come, but what's there right now works great.
 
   
 h2. Next
 
-* tests!
 * tidy up the code a bit
 * generate and publish the rdoc
-* support hour, minute and second
-* provide Day, Year and Month wrapper classes
-* anything 
+* support hour, minute and second (Rails doesn't provide #at_end_of_hour out of the box, so I'm just being lazy so far)
 * parse more date formats for input
-* figure out if I need to care about time zones (everything assumes UTC right now)
-* figure out if I care about localization
-* figure out if I can replace the method_missing magic with something more declarative
+* time zones? (everything assumes UTC right now)
+* localization / internationalization?
+* anything better than method_missing magic (something more declarative)?
 
 
 h2. Project Info
 
-"ActiveTime is hosted on Github":http://github.com/justinfrench/active_time/, where your contributions, forkings, comments and feedback are greatly welcomed.
+"ActiveTime is hosted on Github":http://github.com/justinfrench/activetime/, where your contributions, forkings, comments and feedback are greatly welcomed.
 
 
 Copyright (c) 2008 Justin French, released under the MIT license.
